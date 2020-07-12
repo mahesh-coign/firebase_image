@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -16,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-public class UserFeedActivity extends AppCompatActivity {
+public class UserFeedActivity extends AppCompatActivity  implements ImageAdapter.OnCardListener {
     private RecyclerView recyclerView;
     private ArrayList<Feed> stories;
     private DatabaseReference feedRef;
@@ -39,7 +40,7 @@ public class UserFeedActivity extends AppCompatActivity {
                     }
                 }
                 System.out.println("sdadas "+stories.size());
-                ImageAdapter adapter = new ImageAdapter(getApplicationContext(),stories);
+                ImageAdapter adapter = new ImageAdapter(getApplicationContext(),stories,UserFeedActivity.this);
                 recyclerView.setAdapter(adapter);
             }
 
@@ -48,5 +49,10 @@ public class UserFeedActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void onCardClick(int position) {
+        Toast.makeText(this, ""+stories.get(position).getTitle(), Toast.LENGTH_SHORT).show();
     }
 }
