@@ -3,11 +3,17 @@ package com.mahesh.demofirebase;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
@@ -23,6 +29,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class UserActivity extends AppCompatActivity {
     private EditText etTitle,etDescription;
     private ImageView imageView;
@@ -31,6 +42,7 @@ public class UserActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private DatabaseReference reference;
     private String uid;
+    String currentPicPath;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +86,25 @@ public class UserActivity extends AppCompatActivity {
     }
 
     public void onImageViewTapped(View view) {
-            pickImage();
+       // dispatchTakePictureIntent();
+       //     pickImage();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose Action");
+        String[] options = {"From Gallery", "From Camera","Cancel"};
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case 0: pickImage();
+                    break;
+                    case 1: dispatchTakePictureIntent();
+                    break;
+                    case 2: return;
+                }
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void pickImage() {
@@ -87,9 +117,15 @@ public class UserActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==100&& resultCode==RESULT_OK && data !=null){
-           imageUri= data.getData();
+        if(requestCode==100 && resultCode==RESULT_OK && data !=null) {
+            imageUri = data.getData();
             imageView.setImageURI(imageUri);
+
+        }
+        else if (requestCode == 222 && resultCode == RESULT_OK){
+            File file = new File(currentPicPath);
+            imageUri = Uri.fromFile(file);
+           imageView.setImageURI(imageUri);
         }
     }
 
@@ -103,4 +139,29 @@ public class UserActivity extends AppCompatActivity {
         return  mimeTypeMap.getExtensionFromMimeType(contentResolver.getType(uri));
     }
 
+    private File createImageFile() throws IOException {
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(""+System.currentTimeMillis(),".jpg",storageDir);
+        currentPicPath = image.getAbsolutePath();
+        return  image;
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent pickIntent = new Intent();
+        pickIntent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (pickIntent.resolveActivity(getPackageManager()) != null) {
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            }
+            catch (IOException ex) {
+                Toast.makeText(this, " creating file error", Toast.LENGTH_SHORT).show();
+            }
+            if (photoFile != null){
+                Uri photoUri = FileProvider.getUriForFile(this,"com.mahesh.android.fileprovider",photoFile);
+                pickIntent.putExtra(MediaStore.EXTRA_OUTPUT,photoUri);
+            }
+            startActivityForResult(pickIntent, 222);
+        }
+    }
 }
