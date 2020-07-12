@@ -24,14 +24,14 @@ public class SignInActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private Boolean isUser;
     private DatabaseReference reference;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
-        auth= FirebaseAuth.getInstance();
-
+        auth = FirebaseAuth.getInstance();
     }
 
     public void onSignInTapped(View view) {

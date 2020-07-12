@@ -54,10 +54,13 @@ public class UserActivity extends AppCompatActivity {
         fileRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
                 fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
                         Feed feed = new Feed(title,description,uri.toString(),uid);
+                        String key = reference.push().getKey();
+                        reference.child(key).setValue(feed);
 
                     }
                 });

@@ -9,7 +9,7 @@
     tools:context=".UserActivity">
 
     <ImageView
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="10dp"
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:onClick="onImageViewTapped"
@@ -19,24 +19,24 @@
 
     <EditText
         android:id="@+id/et_title_user"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:hint="Enter title.."
         android:layout_height="wrap_content"/>
     <EditText
         android:id="@+id/et_description_user"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:hint="Enter description.."
         android:layout_height="wrap_content"/>
     <Button
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:text="Upload"
         android:onClick="onUploadTapped"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <Button
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:text="View Feed"
         android:onClick="onViewFeedTapped"
         android:layout_width="match_parent"

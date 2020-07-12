@@ -16,11 +16,11 @@ import java.util.List;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
     private Context context;
-    private List<String> userList;
+    private List<Feed> stories;
 
-    public ImageAdapter(Context mContext, List<String> mUserList){
-        context=mContext;
-        userList=mUserList;
+    public ImageAdapter(Context mContext, List<Feed> stories){
+        this.context=mContext;
+        this.stories=stories;
     }
 
 
@@ -44,15 +44,15 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
-
-            holder.tvTitle.setText("");
-            holder.tvDescription.setText("");
-            Picasso.with(context).load("").fit().into(holder.imageView);
+            Feed story = stories.get(position);
+            holder.tvTitle.setText(story.getTitle());
+            holder.tvDescription.setText(story.getDescription());
+            Picasso.with(context).load(story.getImageLink()).fit().into(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        return stories.size();
     }
 
 }
